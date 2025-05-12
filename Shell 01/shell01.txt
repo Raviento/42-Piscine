@@ -1,0 +1,120 @@
+ex01 ----------------------------------------------------
+
+id -Gn $FT_USER | tr ' ' ',' | tr -d '\n'
+
+id -Gn $FT_USER
+id komutu, kullanıcı hakkında bilgi almak için kullanılır.
+-G seçeneği, kullanıcının üye olduğu grupların kimlik numaralarını (GID) değil, adlarını listeler.
+-n seçeneği, çıktı olarak grup adlarını verir.
+$FT_USER değişkeni, kontrol edilmek istenen kullanıcı adını içerir.
+
+tr ' ' ','
+tr (translate) komutu, karakterleri dönüştürmek için kullanılır.
+' ' (boşluk) karakterlerini ',' (virgül) ile değiştirir.
+
+tr -d '\n'
+tr -d '\n' komutu, yeni satır (\n) karakterini kaldırır.
+Normalde id -Gn komutu çıktısının sonunda bir yeni satır karakteri olabilir. Bunu kaldırarak tek satır halinde yazdırmayı garanti eder.
+
+ex02 -------------------------------------------------------------------------
+
+find . -type f -name '*.sh' -exec basename {} \; | rev | cut -c4- | rev
+
+find . -type f -name '*.sh'
+find . → Geçerli dizin (.) ve tüm alt dizinlerde dosya ara.
+-type f → Sadece dosyaları bul (klasörleri değil).
+-name '*.sh' → Uzantısı .sh olan dosyaları bul.
+
+-exec basename {} \;
+-exec → Her bulunan dosya için belirtilen komutu çalıştır.
+basename {} → Dosyanın yalnızca adını alır (klasör yolunu kaldırır).
+\; → -exec komutunun bittiğini belirtir.
+
+rev
+rev komutu, her satırı ters çevirir.
+
+cut -c4-
+cut -c4- → İlk 3 karakteri (".sh") kes, geri kalan kısmı tut.
+
+
+find . -type f -name '*.sh' -exec basename {} \; | sed "s/.sh$//"
+
+sed "s/.sh$//" → .sh uzantısını kaldır
+sed → Metni düzenlemek için kullanılan bir komuttur.
+"s/.sh$//" → .sh uzantısını kaldırmak için kullanılan düzenli ifade (regex).
+
+ex03 -------------------------------------------------------------------------------------------------
+
+find . -type f -o -type d | wc -l
+
+
+find . -type f -o -type d
+
+. → Mevcut dizin ve alt dizinlerde arama yapar.
+-type f → Normal dosyaları bulur.
+-o → "veya" anlamına gelir.
+-type d → Klasörleri bulur.
+
+wc -l
+
+find komutu her dosya ve klasörü bir satır olarak listeler.
+wc -l, bu satırların sayısını hesaplar ve ekrana yazdırır.
+
+
+ex04 ------------------------------------------------------------------------------------------------
+
+ifconfig -a | grep ether | awk '{print $2}'
+
+
+ifconfig -a → Tüm ağ arayüzlerini listele
+ifconfig -a komutu, tüm ağ arayüzlerini (aktif veya pasif) gösterir.
+Her ağ arayüzü hakkında IP adresi, MAC adresi, ağ maskesi gibi bilgileri içerir.
+Ancak ifconfig bazı modern Linux sistemlerinde varsayılan olarak bulunmaz. Bunun yerine ip a kullanılabilir.
+
+grep ether → Sadece MAC adresi satırlarını filtrele
+grep ether, ifconfig -a çıktısında "ether" içeren satırları getirir.
+Linux'ta MAC adresi içeren satırlar "ether" kelimesini barındırır.
+
+awk '{print $2}' → 2. sütunu (MAC adresini) al
+awk '{print $2}' komutu, her satırı bölerek 2. kelimeyi (MAC adresini) seçer.
+Sütunlar boşluklarla ayrılmıştır:
+$1 = ether
+$2 = 00:1a:2b:3c:4d:5e
+$3 = txqueuelen
+$4 = 1000
+Sadece MAC adresini almak için $2 kullanılır.
+
+
+ex05 --------------------------------------------------------------------------------------------
+
+echo "42" > \"\\\?\$\*\'MaRViN\'\*\$\?\\\"
+
+
+echo "42" → Dosyanın içine sadece "42" yazılmasını sağlar.
+> → Çıktıyı belirtilen dosyaya yönlendirir (dosya yoksa oluşturur, varsa üzerine yazar).
+\"\\\?\$\*\'MaRViN\'\*\$\?\\\" → Özel isimli dosyayı oluşturur.
+
+ls -lRa *MaRV* | cat -e
+
+
+Bu komut:
+
+ls -lRa *MaRV* → İçinde MaRV geçen dosyaları detaylı listeleme modunda (-l), gizli dosyalarla birlikte (-Ra) gösterir.
+cat -e → Satır sonlarını $ ile göstererek dosyanın yalnızca "42" içerdiğini doğrulamaya yardımcı olur.
+
+ex06 ---------------------------------------------------------------------------------------------
+
+ls -l | sed -n 'n;p'
+
+sed → Akış düzenleyici (Stream Editor) olarak kullanılır.
+-n → Normalde sed tüm satırları yazdırır, ama -n eklenirse yalnızca belirtilen satırlar yazdırılır.
+'n;p' → sed için iki komut içerir:
+n → Bir sonraki satırı atla (okuyup geç).
+p → O anki satırı yazdır.
+
+
+ex07 -------------------------------------------------------------------------------------------------
+
+
+
+
